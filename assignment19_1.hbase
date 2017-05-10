@@ -1,0 +1,28 @@
+
+---------------------------------------------------------------------------
+Query 1
+
+
+create external table customer_hbase(rowkey String,id String,name string,location string,age int)
+ 
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+ 
+with serdeproperties ("hbase.columns.mapping"=":key,details:id,details:name,details:location,details:age")
+ 
+tblproperties("hbase.table.name"="customer");
+ 
+
+
+select max(age),min(age) from customer_hbase;
+
+
+---------------------------------------------------------------------------
+Query 2
+
+
+
+customer_data = LOAD 'hbase://customer' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage( 'details:id details:name details:location details:age','-loadKey true') AS (id,name,location,age);
+
+
+
+
